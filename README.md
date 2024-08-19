@@ -5,5 +5,5 @@ This repository contains a WIP script to recreate an easier to use and platform 
 Currently there is no GUI and functions are wrapped to be used by a GUI later. You may be able to use the functions in your other scripts if you'd like for now however. 
 To clone this repository:
 ```
-https://github.com/NathanielH-snek/Med2XLPy.git
+git clone https://github.com/NathanielH-snek/Med2XLPy.git
 ```
