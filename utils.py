@@ -20,8 +20,9 @@ def parse_file(
     metadata = ['Start Date','End Date','Subject','Experiment','Group','Box','Start Time','End Time','MSN']
     experimentSep = [x for x,row in enumerate(fileContents) if row[0].split(':')[0] == metadata[0]]
     experimentSep.append(-1)
-    print(experimentSep)
 
+    dfDict = {}
+        
     for i,exp in enumerate(experimentSep):
         if exp == -1:
             continue
@@ -31,6 +32,7 @@ def parse_file(
             session = fileContents[start:stop]
             sessionInfo = [row for row in session if row[0].split(':')[0] in metadata]
             sessionInfoList = [x for y in sessionInfo for x in y]
+            metaDict = {x.split(':')[0]: x.split(':')[1] for x in sessionInfoList}
             lastInfo = session.index(sessionInfo[-1])
             dataOnly = session[(lastInfo + 1):-1]
             dataVarLocs = [x for x,row in enumerate(dataOnly) if row[0].split(':')[0].isalpha()]
@@ -48,23 +50,27 @@ def parse_file(
                     del varData[0]
                     for row in varData:
                         cleanStr = ' '.join(row[0].split())
-                        out = cleanStr.split(' ')[1:-1]
+                        out = cleanStr.split(' ')[1:]
                         for dataPoint in out:
                             dataOut[key].append(int(dataPoint).round().astype('Int64'))
             dataOut['Metadata'] = sessionInfoList
             df = pd.DataFrame(dict([(key, pd.Series(value)) for key, value in dataOut.items()]))
             columnToMove = df.pop('Metadata')
             df.insert(0, 'Metadata', columnToMove)
+            filename = f"{metaDict['Subject']}--{metaDict['Start Date']}--{metaDict['MSN']}"
+            dfDict[filename] = df
+            
 def save_data(
-    dataframe, #Takes in a dataframe
+    dataframes: dict, #Takes in a dictionary of dataframes
     savefiletype
     ):
+    
     #TODO handle different potential save operations (csv,xlsx,pkl)
     #TODO also eliminate outputting extra column on indexes        
     # Given a dict of dataframes, for example:
     # dfs = {'gadgets': df_gadgets, 'widgets': df_widgets}
-    writer = pd.ExcelWriter(filename, engine='xlsxwriter')
-    for sheetname, df in dfs.items():  # loop through `dict` of dataframes
+    for sheetname, df in dataframes.items():  # loop through `dict` of dataframes
+        writer = pd.ExcelWriter(sheetname, engine='xlsxwriter')
         df.to_excel(writer, sheet_name=sheetname)  # send df to writer
         worksheet = writer.sheets[sheetname]  # pull worksheet object
         for idx, col in enumerate(df):  # loop through all columns
