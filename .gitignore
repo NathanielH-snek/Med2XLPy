@@ -1,2 +1,7 @@
 .DS_Store
 __pycache__
+assets/icon_bak.jpg
+assets/icon.jpg
+assets/icon.iconset
+build
+dist

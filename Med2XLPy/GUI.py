@@ -1,4 +1,5 @@
 import sys
+import os
 from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QFileDialog, QGridLayout, QWidget, QLabel, QHBoxLayout
 from PySide6.QtGui import QAction, QIcon
 from PySide6.QtCore import Qt
@@ -7,16 +8,18 @@ from pathlib import Path
 
 from utils import readFile, parseFile, saveData
 
+#scriptDir = os.path.dirname(os.path.realpath(__file__))
+
 class myApp(QMainWindow):
     def __init__(self):
         super().__init__()
         
         self.outputType = 'Excel'
         self.userHome = Path.home()
-        #self.filePath = f"{self.userHome}/MedPC"
-        self.filePath = '/Users/11nho/Developer/MedPC/GUITEST'
+        self.filePath = f"{self.userHome}/MedPC"
+        
         self.setWindowTitle('MED2XLPy')
-        self.setWindowIcon(QIcon('icon.jpg'))
+        #self.setWindowIcon(QIcon(f"{scriptDir}{os.path.sep}assets/icon.icns"))
         
         menu = self.menuBar()
         
