@@ -19,7 +19,6 @@ class myApp(QMainWindow):
         self.setWindowIcon(QIcon('icon.jpg'))
         
         menu = self.menuBar()
-        #menu.setNativeMenuBar(False)
         
         fileMenu = menu.addMenu('File')
         fileSubmenu = fileMenu.addMenu('Output')
